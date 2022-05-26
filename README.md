@@ -11,6 +11,26 @@ Users are welcome to submit issues or request features.
 
 With time more details and documentation about PS1 operation in PS2 mode will be provided.
 
+## Changelog
+
+**1.7.2**
+- Fixed an IOP init bug which might have impacted boot up on some systems.
+- Allows config saving for PSX.EXE games with no SYSTEM.CNF
+- Memory card 1 or 2 can be selected for saving game config.
+- Config and cheats are now searched in both slots instead of just first slot.
+- AutoDiag is enabled if found in config.
+- Added and improved documentation.
+- User warning if disc not valid.
+- Controller input from both slots.
+- Limited mecha config to possible values and added some info for them.
+- Fixed more minor bugs.
+
+
+**1.7.1**
+- Fixed a race condition causing crash on game boot in some PS2 models.
+- Added Sprite Filtering option.
+- Libcrypt patching. DECKARD ONLY
+- Fixed some small bugs.
 
 ## Features
 
@@ -45,9 +65,33 @@ A full list of internal configs with proper documentation will be coming in the 
 ## Usage
 Download the lastest release from the [release](https://github.com/wisi-w/DKWDRV/releases/latest) page.
 Simple run the ELF files in any way you can. Make sure that you have a valid PS1 disc inserted prior to running.
-Users must configure options for the fixes and features that they want. If they want to save changes they have to use the save General config option in the menu. Selection Run will boot into the game.
+Users must configure options for the fixes and features that they want. If they want to save changes they have to use the Save Game Config option in the menu. Selection Run will boot into the game.
 Most options are easy to understand. Better naming and documentation coming soon.
+Do note that modchip CAN and WILL impact the boot sometimes and you might get black screens.
+Report issues in Github issues and remember to post AS MUCH INFO AS POSSIBLE.
+Your model, DKWDRV version, type of media, id, ids, redump links, modchip everything you find relevant.
+"Does not work" and "Black screen" are horrible reports!
+Remember to also note the information in the "INFO" section of DKWDRV. Make sure to always use the latest version.
 
+## User Configs
+All user per game configs are stored in the memory card. Each game will create it's own save which can be managed from OSDSYS too in case you want to copy or delete it.
+The reason for having a save per game and not all configs inside a main save dir is because with many files OSDSYS won't copy or delete the main file.
+The main file will have a formatted game copy. For example Crash Bandicoot will have SCUS-94900 as game id but the save folder will be "SCUS94900".
+Inside it there will be two possible files, CONFIG.TXT and CHEATS.TXT for cheats.
+An import other case is the problem of games with no SYSTEM.CNF which only have PSX.EXE or that do indeed have SYSTEM.CNF but BOOT filename is still PSX.EXE.
+Since many games share the same id for this games the save name will be PSXyyyyyyyy where yyyyyy is hex value for CRC32 of PSX.exe from that game. This is the only proper way to be able to handler that many PSX.EXE titles out there where many are homebrews.
+Example of a memory card listing
+```
+mc0:
+    SCUS147895 (folder for regular game)
+              CONFIG.TXT
+              CHEATS.TXT
+    PSX1DBA2151 (folder for PSX.EXE game)
+              CONFIG.TXT
+              CHEATS.TXT
+```
+In order to create the folder automatically you need to run Save Game config at least once.
+If many games with PSX.EXE and unsure which is which you can find it out by the hex value of CRC32 in the filename. Extract PSX.EXE from your disc in a PC and calculate it's CRC32. 7zip right click context menu would do the job just fine. Select CRC SHA and in submenu CRC32.
 
 ## DECKARD button combos
 For DECKARD consoles users can press specific combos even while ingame.
@@ -59,7 +103,7 @@ For DECKARD consoles users can press specific combos even while ingame.
 - L1 + L2 + R1 + R2  + CIRCLE Will toggle Sprite MMIN filtering. Up to 7 values can be used. Once 7 is reached it's wraps back to 0. Results vary. Original drivers was never applying filtering to sprites.
 
 ## Cheats
-For DECKARD consoles only cheats can be applied. Cheats must be placed inside memory folder with the game name. Users can save general config to automatically create this folder. At the root of the folder a CHEATS.TXT must be present for cheats to show.
+For DECKARD consoles only cheats can be applied. Cheats must be placed inside memory folder with the game name. Users can save general config to automatically create this folder. At the root of the folder a CHEATS.TXT must be present for cheats to show. Refer to "User Configs" for more info on how to find the save folder.
 The desired cheats must be enabled from the menu every time prior to booting the game.
 Cheats are applied every vblank.
 An example of a cheat file:
@@ -75,7 +119,7 @@ An example of a cheat file:
 
 Supported cheat types:
 | Code(Hex) | Type([Duckstation Naming](https://github.com/stenzek/duckstation) ) |
-| ------ | ------ |
+| :---:  |  :---:  |
 |00 |CodeNop |
 |30 |ConstantWrite8  |
 |80 |ConstantWrite16  |
@@ -110,3 +154,6 @@ Supported cheat types:
 |53 |ExtImprovedSlide  |
 |C2 |MemoryCopy |
     
+## Technical documentation
+Some initial documentation is now online. You can view it [here](https://github.com/wisi-w/DKWDRV/blob/main/tech_docs.md).
+With time it will be updated so make sure to check regularly.
