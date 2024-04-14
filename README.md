@@ -1,3 +1,6 @@
+# REPOSITORY MOVED TO https://github.com/DKWDRV/DKWDRV
+# Please go there from now on.
+
 # DKWDRV
 ## Unified Single PS1DRV Replacement, compatible with mostly all PS2 models. 
 
